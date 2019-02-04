@@ -12,7 +12,6 @@ Then, on the command line, install with
 
 .. code-block::
 
-    .. pip install iliner
     git clone https://github.com/stephwen/iliner.git
     cd iliner
     python setup.py build
