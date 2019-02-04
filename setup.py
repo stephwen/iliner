@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
-import setuptools import setup
+import setuptools 
+from distutils.core import setup
 
 ## Description will come from README. md file
 
 ## Version will come from version.py
 
 
-with open("README.md", "r") as f:
+with open("README.rst", "r") as f:
     long_descr = f.read()
 
 
@@ -19,7 +20,7 @@ with open('iliner/version.py') as fv:
 setup(name='iliner',
     packages=['iliner'],
     version=version['__version__'],
-    description='Run iLASH algorithm'
+    description='Run iLASH algorithm',
     long_description=long_descr,
     entry_points={
     "console_scripts": ['iliner=iliner.iliner:main']
@@ -44,12 +45,12 @@ setup(name='iliner',
     # 'Development Status :: 6 - Mature',
     # 'Development Status :: 7 - Inactive'
     'Intended Audience :: Science/Research',
-    'License :: (TBD),
+    'License :: (TBD)',
     'Programming Language :: Python :: 3 :: Only',
     'Topic :: Scientific/Engineering',
     'Topic :: Scientific/Engineering :: Bio-Informatics',
     'Topic :: Scientific/Engineering :: Medical Science Apps.'],
-    license=tbd)
+    license='tbd')
 
 
 """
