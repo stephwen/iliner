@@ -4,12 +4,12 @@ import argparse
 import logging
 import numpy as np
 import sys
-from .iliner_load_parse import LoadFiles, FileParser
-from .iliner_make_files import FileConvert
-from .iliner_launch_ilash import RunIlash
-from .iliner_ibd_depth import IBDDepth
-from .iliner_stats import IBDStats
-from .iliner_parse_vcf import VcfReader, VcfParser, VcfMakeFiles
+from iliner_load_parse import LoadFiles, FileParser
+from iliner_make_files import FileConvert
+from iliner_launch_ilash import RunIlash
+from iliner_ibd_depth import IBDDepth
+from iliner_stats import IBDStats
+from iliner_parse_vcf import VcfReader, VcfParser, VcfMakeFiles
 
 
 class LogFilter(logging.Filter):
@@ -46,7 +46,8 @@ def main():
     """
     Argument Parser Function that calls the other components of the code
     """
-    parser = argparse.ArgumentParser(description = 'Arguments for running the different modules of iLiner')
+    parser = argparse.ArgumentParser(description = 'Arguments for running the different modules of iLiner',
+    epilog="For additional help, see xxxx github xxxx")
 
     parser.add_argument('module', choices=['ilash', 'ibd_depth', 'stats'], help='module choice')
     parser.add_argument('--sample', '-s', type=str, required=False, help='Sample file with file path')
@@ -54,7 +55,7 @@ def main():
     parser.add_argument('--genetic_map', '-gm', type=str, required=False, help='Genetic map file with file path')
     parser.add_argument('--mapfile', '-mf', type=str, required=False, help='Mapfile made by the ilash module')
     parser.add_argument('--outfile_prefix', '-op', type=str, help='Prefix for all of the files produced from this module with file path')
-    parser.add_argument('--ilash', '-i', type=str, required=False, help='File path to ilash')
+    parser.add_argument('--ilash_path', '-i', type=str, required=False, help='File path to ilash')
     parser.add_argument('--ilash_output', '-io', type=str, required=False, help='Ilash output, one chromosome for ibd_depth module and all chromosomes for stats module')
     parser.add_argument('--population_file', '-pf', type=str, required=False, help='File with individual ids and population [ID]tab[Population]')
     parser.add_argument('--vcf', '-v', type=str, required=False, help='Phased VCF with file path')
@@ -68,6 +69,9 @@ def main():
         if args_dict['sample'] != None:
             log.logger.info("Parsing your sample and haplotype files")
             samp_file = LoadFiles.load_sample(args.sample)
+            if args_dict['haps'] == None:
+                log.logger.info('Please specify a haplotype file.')
+                quit()
             log.logger.info('Sample file has been loaded')
             haps_file = LoadFiles.load_haps(args.haps)
             log.logger.info('Haplotype file has been loaded')
@@ -147,6 +151,8 @@ def main():
             log.logger.info('Your pedigree file has been made')
             log.logger.info('Launching iLASH')
             RunIlash.make_param_file(mapfile_str, pedfile_str, args.ilash)
+        if args_dict['sample'] == None and args_dict['vcf'] == None :
+            log.logger.info('Please specify a sample file or a VCF file.')
     elif args.module == 'ibd_depth':
         log.logger.info('You have selected ibd_depth')
         mapfile = IBDDepth.load_files(args.mapfile)
@@ -182,12 +188,13 @@ def main():
             log.logger.info('Post-hoc Wilcoxon Rank Sum Test')
             IBDStats.get_ranksum(stats_obj, log)
         else:
-            log.logger.info('Fail to reject the hypothesis - A discernable difference does not exist between the groups')
+            log.logger.info('Failure to reject the hypothesis - A significant difference does not exist between the groups')
         pop_heatmap = IBDStats.fraction_ibd_sharing(stats_obj)
         fig = pop_heatmap.get_figure()
         fig.set_size_inches(13.0, 13.0)
         fig.savefig(args.outfile_prefix + '_heatmap.png')
-        log.logger.info('Your heatmap has been made')
+        log.logger.info('Your heatmap has been made.')
+
 
 
 if __name__ == '__main__':

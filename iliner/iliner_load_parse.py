@@ -31,7 +31,7 @@ class LoadFiles(object):
             [ID_1] [ID_2] [missing] [covariates]
         """
         if os.path.isfile(path):
-            samp_file = pd.read_table(path, dtype=str, sep=' ', skiprows=[1])
+            samp_file = pd.read_csv(path, dtype=str, sep=' ', skiprows=[1])
             return samp_file
         else:
             raise IOError("Sample file {} does not exist.".format(path))
