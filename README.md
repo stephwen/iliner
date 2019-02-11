@@ -10,10 +10,15 @@ This repository contains the code for iLiner, a Python pipeline used to perform 
 
 ## Installation
 
-iLiner is available as a pip package ans can be installed via:
+~~iLiner is available as a pip package ans can be installed via:~~
 ```
-pip install iliner
+git clone iliner
+cd iliner
+python iliner/iliner.py module [options]
 ```
+
+
+
 
 ## Functionnality
 
